@@ -1,0 +1,39 @@
+{
+    "pins": [
+        {
+            "tag": "mavi led",
+            "type": "l",
+            "pin": 2,
+            "channel": 0,
+            "value": 1
+        },
+        {
+            "tag": "kirmizi led",
+            "type": "l",
+            "pin": 27,
+            "channel": 0,
+            "value": 0
+        },
+        {
+            "tag": "servo 1",
+            "type": "s",
+            "pin": 12,
+            "channel": 0,
+            "value": 60
+        },
+        {
+            "tag": "motor 1",
+            "type": "m",
+            "pin": 14,
+            "channel": 1,
+            "value": 0
+        },
+        {
+            "tag": "servo 2",
+            "type": "s",
+            "pin": 26,
+            "channel": 2,
+            "value": 0
+        }
+    ]
+}

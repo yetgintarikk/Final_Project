@@ -1,0 +1,94 @@
+{
+    "commands":[
+        {
+            "tag":"mavi led",
+            "text":["led'i aç","led'i yak","elma"],
+            "type":"set",
+            "val":1
+        },
+        {
+            "tag":"mavi led",
+            "text":["led'i kapat","led'i söndür", "armut"],
+            "type":"set",
+            "val":0
+        },
+        {
+            "tag":"kirmizi led",
+            "text":["lambayı aç"],
+            "type":"set",
+            "val":1
+        },
+        {
+            "tag":"kirmizi led",
+            "text":["lambayı kapat"],
+            "type":"set",
+            "val":0
+        },
+        {
+            "tag":"motor 1",
+            "text":["motor hızlı","pervane hızlı"],
+            "type":"set",
+            "val":100
+        },
+        {
+            "tag":"motor 1",
+            "text":["motor orta", "pervane orta"],
+            "type":"set",
+            "val":60
+        },
+        {
+            "tag":"motor 1",
+            "text":["motor yavaş", "pervane yavaş"],
+            "type":"set",
+            "val":30
+        },
+        {
+            "tag":"motor 1",
+            "text":["motor dur","dur", "pervaneyi kapat", "pervaneyi durdur"],
+            "type":"set",
+            "val":0
+        },
+        {
+            "tag":"servo 1",
+            "text":["yukarı", "pencereyi aç"],
+            "type":"set",
+            "val":180
+        },
+        {
+            "tag":"servo 1",
+            "text":["orta", "pencereyi ortala"],
+            "type":"set",
+            "val":90
+        },
+        {
+            "tag":"servo 1",
+            "text":["aşağı", "pencereyi kapat"],
+            "type":"set",
+            "val":0
+        },
+        {
+            "tag":"servo 1",
+            "text":["indir", "pencereyi indir"],
+            "type":"add",
+            "val":-30
+        },
+        {
+            "tag":"servo 1",
+            "text":["kaldır", "pencereyi kaldır"],
+            "type":"add",
+            "val":30
+        },
+        {
+            "tag":"motor 1",
+            "text":["hızlandır", "pervaneyi hızlandır"],
+            "type":"add",
+            "val":30
+        },
+        {
+            "tag":"motor 1",
+            "text":["yavaşlat", "pervaneyi yavaşlat"],
+            "type":"add",
+            "val":-30
+        }
+    ]
+}

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="btn-container">
+        <button id="icon-button-theme" onclick="changeTheme()">
+            <img id="icon-img-theme" src="https://cdn-icons-png.flaticon.com/512/91/91466.png" alt="Icon">
+        </button>
+        <button onclick="refreshState()" class="minimal-button">YENILE</button>
+        <label id="heat"></label>
+        <label id="hum"></label>
+    </div>
+
+    <div id="cp" class="container">
+    </div>
+
+</body>
+<script>
+
+    let themeSwitch = true
+    function changeTheme() {
+        console.log(themeSwitch)
+        themeSwitch = !themeSwitch
+        document.getElementsByTagName("html")[0].style.filter = themeSwitch ? "invert(0)" : "invert(1)"
+
+        document.getElementById("icon-img-theme").src = themeSwitch ?  "https://cdn-icons-png.flaticon.com/512/91/91466.png" :"https://www.iconpacks.net/icons/2/free-sun-icon-3337-thumb.png"
+
+    }
+
+    let lastData = [-1, -1]
+    function getSensorData() {
+        fetch("/sensor").then(response => {
+            response.json().then(data => {
+                heatLabel = document.getElementById("heat");
+                heatLabel.style.backgroundColor = 'darkred';
+                heatLabel.style.color = 'white';
+                heatLabel.style.borderRadius = '5px';
+                heatLabel.style.padding = "4px"
+                humLabel = document.getElementById("hum");
+                humLabel.style.backgroundColor = 'darkblue';
+                humLabel.style.color = 'white';
+                humLabel.style.padding = "4px"
+                humLabel.style.borderRadius = '5px';
+                if (data[0] !== -1)
+                    lastData = data;
+                if (lastData[0] === -1) {
+                    heatLabel.innerText = "SICAKLIK BEKLENİYOR..."
+                    humLabel.innerText = "NEM BEKLENİYOR..."
+                } else {
+                    heatLabel.innerText = "SICAKLIK: " + lastData[0] + " °C"
+                    humLabel.innerText = "NEM: %" + lastData[1]
+                }
+            })
+        })
+    }
+
+
+    function sendResponse(msg) {
+        fetch("/command", {
+            method: "POST",
+            mode: "no-cors",
+            body: msg
+        }).then(() => { })
+    }
+
+
+    function getRange(text, min, max, step, current_val, func) {
+
+        let div_element = document.createElement("div");
+        let inputElement = document.createElement("input");
+        inputElement.type = "range";
+        inputElement.classList.add("form-range")
+        inputElement.min = min;
+        inputElement.max = max;
+        inputElement.step = step
+        inputElement.value = current_val
+
+        if (func)
+            inputElement.onchange = () => func(inputElement.value)
+
+        let label_elemet = document.createElement("label");
+        label_elemet.innerText = text
+        label_elemet.classList.add("form-check-label")
+
+        div_element.appendChild(label_elemet)
+        div_element.appendChild(inputElement)
+        return div_element;
+
+
+    }
+
+    function getSwitch(text, val, func) {
+        let div_element = document.createElement("div");
+        div_element.style.display = "flex"
+        div_element.classList.add('form-switch');
+        div_element.classList.add('form-check');
+
+        let input_elemet = document.createElement("input");
+        input_elemet.classList.add("form-check-input")
+        input_elemet.type = "checkbox";
+        input_elemet.role = "switch"
+        input_elemet.checked = val ? true : false;
+
+        if (func)
+            input_elemet.onchange = () => func(input_elemet.checked ? 1 : 0)
+
+        let label_elemet = document.createElement("label");
+        label_elemet.innerText = text
+        label_elemet.classList.add("form-check-label")
+        label_elemet.style.marginLeft = "1rem"
+
+        div_element.appendChild(input_elemet)
+        div_element.appendChild(label_elemet)
+        return div_element
+
+    }
+
+    function refreshState() {
+        let cp_element = document.getElementById("cp");
+        cp_element.innerHTML = ''
+
+        fetch("/pins").then(stateData => {
+            stateData.json().then(state => {
+                state.pins.forEach(pin => {
+                    if (pin.type === "s") {
+
+                        ServoElement = getRange(pin.tag, 0, 180, 10, pin.value,
+                            (value) => {
+                                sendResponse(pin.tag + "|" + value)
+                            })
+                        cp_element.appendChild(ServoElement)
+                    } else if (pin.type === "m") {
+                        MotorElement = getRange(pin.tag, 0, 100, 10, pin.value,
+                            (value) => {
+                                sendResponse(pin.tag + "|" + value)
+                            })
+                        cp_element.appendChild(MotorElement)
+
+                    } else if (pin.type === "l") {
+                        LedElement = getSwitch(pin.tag, pin.value, (value) => {
+                            sendResponse(pin.tag + "|" + value)
+                        })
+                        cp_element.appendChild(LedElement)
+                    }
+                })
+            })
+        })
+    }
+
+    window.setInterval(getSensorData, 1000)
+    refreshState()
+
+</script>
+
+
+<style>
+    html{
+        transition: all;
+        transition-duration: 250ms;
+    }
+    .btn-container {
+        text-align: center;
+        margin-top: 3rem;
+    }
+
+    label {
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .container {
+        border: 2px solid lightgrey;
+        padding: 20px;
+        border-radius: 8px;
+        width: 80%;
+        margin: 0 auto;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr;
+    }
+
+    .minimal-button {
+        margin-right: 2rem;
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: all;
+        transition-duration: 200ms;
+    }
+
+    .minimal-button:hover {
+        background-color: #61e968;
+        transition: all;
+        color: black;
+
+        transition-duration: 100ms;
+    }
+
+    .minimal-button:active {
+        background-color: #1f5d22;
+        color: white;
+    }
+
+    #icon-button-theme {
+        position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    background-color: #ffffff; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 1px 3px 9px rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+    padding: 0;
+    transition: all;
+    transition-duration: 150ms;
+}
+
+#icon-button-theme img {
+    
+    width: 24px; 
+    height: 24px; 
+}
+
+#icon-button-theme:hover {
+    transition-duration: 150ms;
+
+    background-color: #f0f0f0;
+}
+
+
+</style>
+
+</html>
