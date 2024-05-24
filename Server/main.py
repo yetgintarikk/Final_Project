@@ -14,6 +14,6 @@ if __name__ == '__main__':
     proc_server_audio = Process(target=ServerProcessAudio, args=(CommandsQueue,SensorDataQueue,))
 
     proc_server_audio.start()
-    webUI.run(host=SERVER_PORT)
+    webUI.run(host=IP_ADRESS)
     proc_server_audio.join() # proc_server_audio processinin işini sonlandırmasını bekler
     print("End")
