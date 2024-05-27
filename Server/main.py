@@ -1,9 +1,9 @@
-from multiprocessing import Process, Queue
+from multiprocessing import Process
 from server import Server
 from flaskServer import webUI,CommandsQueue, SensorDataQueue
 
-IP_ADRESS = "YOUR_IP_ADRESS" # "192.168.24.99"
-SERVER_PORT = YOUR_SERVER_PORT # 7070
+IP_ADRESS = "YOUR_SERVER_IP_ADRESS"
+SERVER_PORT = YOUR_SERVER_PORT
 
 def ServerProcessAudio(cmdQ, sensorDataQueue):
     server = Server(cmdQ,sensorDataQueue)
@@ -17,3 +17,8 @@ if __name__ == '__main__':
     webUI.run(host=IP_ADRESS)
     proc_server_audio.join() # proc_server_audio processinin işini sonlandırmasını bekler
     print("End")
+
+
+
+
+

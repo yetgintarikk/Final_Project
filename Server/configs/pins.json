@@ -5,28 +5,28 @@
             "type": "l",
             "pin": 2,
             "channel": 0,
-            "value": 1
+            "value": 0
         },
         {
             "tag": "kirmizi led",
             "type": "l",
             "pin": 27,
             "channel": 0,
-            "value": 0
+            "value": 1
         },
         {
             "tag": "servo 1",
             "type": "s",
             "pin": 12,
             "channel": 0,
-            "value": 60
+            "value": 110
         },
         {
             "tag": "motor 1",
             "type": "m",
             "pin": 14,
             "channel": 1,
-            "value": 0
+            "value": 40
         },
         {
             "tag": "servo 2",
